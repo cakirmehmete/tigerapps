@@ -354,7 +354,7 @@ def events(request):
     return render(request, 'wintersession/events.html', {})
 
 def admin(request):
-    if not request.user.is_superuser:
+    if not request.user.is_staff:
         defaults = {
             'template_name': 'admin/login.html',
             'authentication_form': AdminAuthenticationForm,
@@ -372,7 +372,7 @@ def admin(request):
     }
     return render(request, 'wintersession/admin.html', context)
 
-@django_user_passes_test(lambda u: u.is_superuser)
+@django_user_passes_test(lambda u: u.is_staff)
 @require_POST
 def admin_email(request):
     to_emails = [netID + '@princeton.edu' for netID in Student.objects.all().values_list('netID', flat=True)]
