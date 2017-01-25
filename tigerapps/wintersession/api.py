@@ -7,7 +7,7 @@ from rest_framework_ember.renderers import JSONRenderer
 from rest_framework.response import Response
 from wintersession import views
 from wintersession.models import Student, Course, Registration
-from wintersession.time import decode
+from wintersession.time_decode import decode
 from wintersession.views import TIMEZONE
 
 

@@ -17,7 +17,7 @@
 	<link rel="image_src" href="{{ STATIC_PREFIX }}wintersession/files/theme/default-bg.jpg" />
 	<link rel='stylesheet' type='text/css' href='{{ STATIC_PREFIX }}wintersession/files/main_style.css' title='wsite-theme-css' />
 	<link rel="stylesheet" href="{{ STATIC_URL }}django_tables2/themes/paleblue/css/screen.css" />
-<link href='//fonts.googleapis.com/css?family=Source+Sans+Pro:400,300,300italic,200,200italic,700,400italic,700italic' rel='stylesheet' type='text/css' />
+<link href='//fonts.googleapis.com/css?family=Grand+Hotel|Source+Sans+Pro:400,300,300italic,200,200italic,700,400italic,700italic' rel='stylesheet' type='text/css' />
 <style type='text/css'>
 .wsite-elements.wsite-not-footer div.paragraph, .wsite-elements.wsite-not-footer p, .wsite-elements.wsite-not-footer .product-block .product-title, .wsite-elements.wsite-not-footer .product-description, .wsite-elements.wsite-not-footer .wsite-form-field label, .wsite-elements.wsite-not-footer .wsite-form-field label, #wsite-content div.paragraph, #wsite-content p, #wsite-content .product-block .product-title, #wsite-content .product-description, #wsite-content .wsite-form-field label, #wsite-content .wsite-form-field label, .blog-sidebar div.paragraph, .blog-sidebar p, .blog-sidebar .wsite-form-field label, .blog-sidebar .wsite-form-field label {}
 #wsite-content div.paragraph, #wsite-content p, #wsite-content .product-block .product-title, #wsite-content .product-description, #wsite-content .wsite-form-field label, #wsite-content .wsite-form-field label, .blog-sidebar div.paragraph, .blog-sidebar p, .blog-sidebar .wsite-form-field label, .blog-sidebar .wsite-form-field label {}
@@ -73,12 +73,12 @@ var STYLE_PREFIX = 'wsite';
                 <tr>
                     <td>
                         <a href="/">
-                            <img style="height:50px;margin-right:15px;" src="{{ STATIC_PREFIX }}wintersession/files/logo_17.png"/>
+                            <img style="height:50px;margin-right:15px;" src="{{ STATIC_PREFIX }}wintersession/files/logo_white.png"/>
                         </a>
                     </td>
 
                     <td id="logo"><span class='wsite-logo'><a href='/'>
-                    <span id="wsite-title"><img style="width:275px; height:auto;" src="{{ STATIC_PREFIX }}wintersession/files/banner_17.png"/></span></a></span></td>
+                    <span id="wsite-title">Wintersession {% now "Y" %} </span></a></span></td>
 					<td><ul class='wsite-menu-default'>
 					{% block menu %}
 					<li id='pg721251121132996039'><a href='{% url 'home' %}'>Home</a></li>
@@ -117,7 +117,7 @@ var STYLE_PREFIX = 'wsite';
 {% block content %}
 {% endblock content %}
 
-                <img style="height:100px;" src="{{ STATIC_PREFIX }}wintersession/files/theme/wintersessionlogo_17.png"/>
+                <img style="height:100px;" src="{{ STATIC_PREFIX }}wintersession/files/logo_blue.png"/>
 <br>
 <span style="color:black !important;">Brought to you by the USG</span>
                 </div>
@@ -126,9 +126,7 @@ var STYLE_PREFIX = 'wsite';
 
     </div><!-- end main-wrap -->
 
-    <div id="footer-wrap">
-        <div style="min-height:0px;" class="container">
-<span style="font-size:12px;">Design adapted from a Weebly site. Powered by Django.</span>
+
 <script type='text/javascript'>
 <!--
 
@@ -162,10 +160,6 @@ if (document.cookie.match(/(^|;)\s*is_mobile=1/)) {
 
 </script>
 
-
-
-        </div><!-- end container -->
-    </div><!-- end footer-wrap -->
 
 {% endblock whole %}
 

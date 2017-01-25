@@ -9,7 +9,7 @@ from django.views.decorators.http import require_POST, require_GET
 from wintersession.models import Course, Student, Registration, Instructor
 from django_tables2 import RequestConfig
 from wintersession.tables import LtdCourseTable, CourseTable, AttendanceTable#, StudentTable,
-from wintersession.time import decode, decode_time
+from wintersession.time_decode import decode, decode_time
 from django.core.urlresolvers import reverse
 from wintersession.forms import AttendanceForm, AgendaPrivacyForm, FriendAgendaForm
 from django.forms.models import modelformset_factory, modelform_factory
@@ -27,15 +27,15 @@ from models import Section
 
 # Wintersession registration start
 TIMEZONE = timezone('US/Eastern')
-REGSTART = TIMEZONE.localize(datetime.datetime(year=2016,
+REGSTART = TIMEZONE.localize(datetime.datetime(year=2017,
                                                month=1,
                                                day=13,
                                                hour=0,
                                                minute=0,
                                                second=1))
-REGEND   = TIMEZONE.localize(datetime.datetime(year=2016,
+REGEND   = TIMEZONE.localize(datetime.datetime(year=2017,
                                                month=1,
-                                               day=22,
+                                               day=29,
                                                hour=23,
                                                minute=59,
                                                second=59))
