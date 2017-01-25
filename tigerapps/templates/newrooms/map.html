@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Campus Floor Plans</title>
+<script type="text/javascript">var cache_bust = '{{bust}}';</script>
+<link rel="stylesheet" href="/static/newrooms/leaflet/leaflet.min.css{{bust}}" />
+<link rel="stylesheet" href="/static/newrooms/css/bootstrap.min.css{{bust}}" />
+<link rel="stylesheet" href="/static/newrooms/css/bootstrap-material-design.min.css{{bust}}" />
+<script src="/static/newrooms/leaflet/leaflet.min.js{{bust}}"></script>
+<script src="/static/newrooms/js/building-data.min.js{{bust}}"></script>
+<script src="/static/newrooms/js/overlay-control.min.js{{bust}}"></script>
+<script src="/static/newrooms/js/legend-control.min.js{{bust}}"></script>
+<script src="/static/newrooms/js/jquery-1.12.0.min.js{{bust}}"></script>
+<script src="/static/newrooms/js/typeahead.jquery.min.js{{bust}}"></script>
+<!--<script src="js/map.min.js"></script>-->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+<style>
+
+/* Res College Colors */
+
+.color-butler { stroke: #0068AC }
+.color-whitman {stroke: #89CCE2 }
+.color-rockefeller {stroke: #6EB43F }
+.color-mathey{stroke: #941e00 }
+.color-forbes{stroke: #EF4035 }
+.color-wilson{stroke: #F8981D }
+.color-upperclass{stroke: #828282 }
+
+
+
+#map { 
+    position:absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin-top: 50px;
+}
+
+
+@media(min-width:1200px) {
+    #map {
+        margin-top: 60px;
+    }
+}
+.legend {
+    display: none;
+}
+@media(min-width:610px) {
+    .legend {
+        display: initial;
+    }
+}
+
+
+
+body {
+    margin: 0;
+} 
+
+.overlay-control {
+    background-color: white;
+    padding: 1em;
+    padding-top: 0;
+    -moz-box-shadow: 0px 0px 10px -1px rgba(0,0,0,0.75);
+    -webkit-box-shadow: 0px 0px 10px -1px rgba(0,0,0,0.75);
+    box-shadow: 0px 0px 10px -1px rgba(0,0,0,0.75);
+}
+
+.overlay-control > h3 {
+    font-size: 1.5em;
+}
+
+.overlay-link {
+    cursor: pointer;
+    padding: 0.5em;
+    font-weight: 300;
+    display: block;
+}
+
+.overlay-link-selected {
+    font-weight: 600;
+}
+
+img.leaflet-image-layer {
+    background-color: white;
+}
+
+a:hover {
+    color: #0078A8;
+}
+/* prevent navbar collapse and force horiontal scroll*/
+body, nav.navbar.navbar-default {
+    margin-bottom: 0px;
+    
+}
+
+.navbar-brand {
+    margin-left: -15px;
+}
+
+.navbar-nav {
+    margin: 0;
+}
+.container-fluid>.navbar-header {
+    margin-right: 0;
+    margin-left: 0;
+}
+.navbar-header, .navbar-nav>li {
+    float: left;
+}
+
+.navbar.navbar-default {
+   background-color: #03A9F4;
+}
+
+.overlay-control.searchbox.leaflet-control {
+    padding: 5px;
+}
+
+#searchbox {
+    width: 300px;
+   
+}
+
+.searchbox {
+    padding: 3px;
+    margin-top: .5em;
+    margin-left: 50%;
+    position: relative;
+    left: -155px;
+    z-index: 1000;
+    background-color: white;
+    width: 310px;
+}
+
+/* Legend styling */
+span.title {
+    padding: 2px;
+    font-size: 1.1em;
+    margin-left: .2em;
+}
+
+span.color-swatch {
+    width: 1em;
+    height: 1em;
+    display: inline-block;
+    margin-top: .5em;
+}
+
+
+/* Typeahead styling*/
+
+
+.typeahead,
+.tt-query,
+.tt-hint {
+  width: 100%;
+  height: 30px;
+  padding: 8px 12px;
+  font-size: 24px;
+  line-height: 30px;
+  border: 2px solid #ccc;
+  -webkit-border-radius: 8px;
+     -moz-border-radius: 8px;
+          border-radius: 8px;
+  outline: none;
+}
+
+.typeahead {
+  background-color: #fff !important;
+  border: none;
+}
+
+
+
+.tt-hint {
+  color: #999
+}
+
+.tt-menu {
+  width: 100%;
+  margin: 12px 0;
+  padding: 8px 0;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  -webkit-border-radius: 8px;
+     -moz-border-radius: 8px;
+          border-radius: 8px;
+  -webkit-box-shadow: 0 5px 10px rgba(0,0,0,.2);
+     -moz-box-shadow: 0 5px 10px rgba(0,0,0,.2);
+          box-shadow: 0 5px 10px rgba(0,0,0,.2);
+}
+
+.tt-suggestion {
+  padding: 3px 20px;
+  font-size: 18px;
+  line-height: 24px;
+}
+
+.tt-suggestion:hover {
+  cursor: pointer;
+  color: #fff;
+  background-color: #03A9F4;
+}
+
+.tt-suggestion.tt-cursor {
+  color: #fff;
+  background-color: #03A9F4;
+
+}
+
+.tt-suggestion p {
+  margin: 0;
+}
+
+.btn-warning {
+    background-color: #FFA726 !important;
+}
+
+</style>
+</head>
+
+<body>
+<nav class="navbar navbar-default">  
+     <div class="container-fluid">
+         <div class="navbar-header">  
+             <a class="navbar-brand" href="#">Rooms</a>   
+         </div> 
+         <ul class="nav navbar-nav"> 
+             <li class="active"><a href="#">Floor Plans</a></li> 
+             <li><a href="table">Rooms List</a></li> 
+         </ul>
+    </div>
+         
+</nav>
+<div class="searchbox">
+    <input class='typeahead' id='searchbox' placeholder='Search' autofocus/>
+</div>
+<div id="map"></div>
+<div class="map-container"></div>
+<script src="/static/newrooms/js/main.min.js{{bust}}"></script>
+
+
+<svg>
+    <defs>
+         <pattern id="mathey-rockefeller"
+           width="9" height="10"
+           patternUnits="userSpaceOnUse"
+           patternTransform="rotate(45)">
+               <line stroke="#6EB43F" stroke-width="9px" y2="10"/>
+               <line stroke="#941e00" stroke-width="9px" x1="9" x2="9" y2="10"/>
+         </pattern>
+         <pattern id="mathey-upperclass"
+           width="9" height="10"
+           patternUnits="userSpaceOnUse"
+           patternTransform="rotate(45)">
+               <line stroke="#828282" stroke-width="9px" y2="10"/>
+               <line stroke="#941e00" stroke-width="9px" x1="9" x2="9" y2="10"/>
+         </pattern>
+         <pattern id="butler-upperclass"
+           width="9" height="10"
+           patternUnits="userSpaceOnUse"
+           patternTransform="rotate(45)">
+               <line stroke="#828282" stroke-width="9px" y2="10"/>
+               <line stroke="#0068AC" stroke-width="9px" x1="9" x2="9" y2="10"/>
+         </pattern>
+    </defs>
+</svg>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-76031010-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+<script>(new Image()).src = (location.protocol == "https:" ? "https:" : "http:") + "//tracker.maximz.com/pixel/roomsmap/{{ username }}/pixel.png";</script>
+</body>
+
+</html>
