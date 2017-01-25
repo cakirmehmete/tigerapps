@@ -188,6 +188,7 @@ INSTALLED_APPS = (
     'pounce',
     'writetime',
     'rooms',
+#    'newrooms',
     'pom',
     'sectionswap',
     'storage',
@@ -221,3 +222,7 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAdminUser'
     ]
 }
+
+
+
+

@@ -2,6 +2,8 @@ from django.db import models
 from django.forms import ModelForm
 import time
 
+# keeping this old stuff in to not mess with database
+
 photopath = 'photo'
 
 class Draw(models.Model):
