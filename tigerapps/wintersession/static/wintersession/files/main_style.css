@@ -12,7 +12,7 @@
  #header-wrap, #banner-wrap, #nav-wrap, #main-wrap, #footer-wrap { width:100%; }
  a { color: #2663ae; }
  a:hover { color: #22599c; }
- h1, h2 { font-size: 22px; padding: .5em 0 .2em 0; line-height: 27px; font-family: 'Source Sans Pro', sans-serif; font-weight: 600; color: #95C7FA; }
+ h1, h2 { font-size: 22px; padding: .5em 0 .2em 0; line-height: 27px; font-family: 'Source Sans Pro', sans-serif; font-weight: 600; color: #03A9F4; }
  h1 { font-size: 28px; line-height: 33px; }
  font { vertical-align: middle; }
  div.paragraph { font-size: 16px; color: #111; line-height: 21px; font-weight: normal; padding: .5em 0; }
@@ -49,7 +49,7 @@
  .wsite-social-vimeo:hover { background-position: -366px -54px; }
  .wsite-social-yahoo { background-position: -410px -12px; }
  .wsite-social-yahoo:hover { background-position: -410px -54px; }
- #nav-wrap { background: #95C7FA; -webkit-box-shadow: 0px 1px 1px 1px rgba(0, 0, 0, 0.2); box-shadow: 0px 1px 1px 1px rgba(0, 0, 0, 0.2); }
+ #nav-wrap { background: #03A9F4; -webkit-box-shadow: 0px 1px 1px 1px rgba(0, 0, 0, 0.2); box-shadow: 0px 1px 1px 1px rgba(0, 0, 0, 0.2); }
  .splash-page #nav-wrap, .no-header-page #nav-wrap, .short-header-page #nav-wrap, .tall-header-page #nav-wrap { position: fixed; top: 0; left: 0; z-index: 999; }
  .no-header-page #main-wrap, .short-header-page #banner-wrap, .tall-header-page #banner-wrap { padding-top: 70px; }
  .splash-page #splash-wrap { padding-top: 170px; padding-bottom: 70px; }
@@ -64,11 +64,11 @@
  #banner { -webkit-font-smoothing: antialiased; }
  #banner h2 { color: #fff; font-size: 54px; line-height: 54px; font-family: 'Source Sans Pro', sans-serif; font-weight: 600; padding: 0px 0px 15px; }
  #banner div.paragraph { color: #fff; font-size: 16px; padding: 26px 0 40px; }
- #banner p { color: #95C7FA; font-size: 16px; padding: 26px 0 40px; }
+ #banner p { color: #03A9F4; font-size: 16px; padding: 26px 0 40px; }
  .splash-page, .landing-page #banner-wrap, .tall-header-page #banner-wrap, .short-header-page #banner-wrap { position: relative; background: transparent url('theme/default-bg.jpg?704987') center center no-repeat; background-size: cover; }
  /* #home-banner-wrap { position: relative; background: transparent url('theme/wintersessionlogo.png?704987') center center no-repeat; background-size: cover; } */
  .landing-page #banner-wrap .container, .tall-header-page #banner-wrap .container, .short-header-page #banner-wrap .container { display: table; height: 100%; }
- .splash-page:before, .landing-page #banner-wrap:before, .tall-header-page #banner-wrap:before, .short-header-page #banner-wrap:before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: #95C7FA; opacity: 0.35}
+ .splash-page:before, .landing-page #banner-wrap:before, .tall-header-page #banner-wrap:before, .short-header-page #banner-wrap:before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: #03A9F4; opacity: 0.35}
  .landing-page #banner { text-align: center; }
  .landing-page #banner, .tall-header-page #banner, .short-header-page #banner { background: none; padding: 0; vertical-align: middle; } /* display: table-cell;  */
  .short-header-page #banner, .tall-header-page #banner { display: table-row; height: 100%; }
