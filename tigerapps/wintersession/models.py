@@ -1,15 +1,17 @@
 import collections
 from django.db import models
 import ast
-from wintersession.time import decode_time
+from wintersession.time_decode import decode_time
+from blocks import blocks_to_friendly, friendly_to_blocks
+import re
 
 
-class ListField(models.TextField):
+class BlocksField(models.TextField):
     __metaclass__ = models.SubfieldBase
     description = "Stores a python list"
 
     def __init__(self, *args, **kwargs):
-        super(ListField, self).__init__(*args, **kwargs)
+        super(BlocksField, self).__init__(*args, **kwargs)
 
     def to_python(self, value):
         if not value:
@@ -18,13 +20,19 @@ class ListField(models.TextField):
         if isinstance(value, list):
             return value
 
+        #A bit of a hack to give friendlier schedule views in admin
+        #Check for a friendly formatted string and convert back
+        #See also the BlocksWidget in admin.py
+        if not re.match('\[(\s*\d{4}\s*|,)*\]', value):
+            return friendly_to_blocks(value)
+
         return [int(x) for x in value.replace("[", "").replace("]", "").replace(" ", "").split(",")]
 
     def get_prep_value(self, value):
         if value is None:
             return value
-
-        return unicode(value)
+        #A bit of a hack to give friendlier schedule views in admin.
+        return str(value)
 
     def value_to_string(self, obj):
         value = self._get_val_from_obj(obj)
@@ -94,7 +102,7 @@ class Course(models.Model):
     max_enroll = models.IntegerField(default=200)
     cancelled = models.BooleanField(default=False)
     room = models.CharField(max_length=200,default='tbd')
-    blocks = ListField('Course blocks')
+    blocks = BlocksField('Course blocks')
     schedule = models.CharField(max_length=50)
     students = models.ManyToManyField(Student, through='Registration')
     instructors = models.ManyToManyField(Instructor)
@@ -103,7 +111,7 @@ class Course(models.Model):
         ordering = ['title']
 
     def __unicode__(self):  # Python 3: def __str__(self):
-        return self.courseID
+        return self.courseID + ' ' + self.title
 
     def current_enroll(self):
         return len(self.students.all())

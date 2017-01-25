@@ -70,7 +70,7 @@
  .landing-page #banner-wrap .container, .tall-header-page #banner-wrap .container, .short-header-page #banner-wrap .container { display: table; height: 100%; }
  .splash-page:before, .landing-page #banner-wrap:before, .tall-header-page #banner-wrap:before, .short-header-page #banner-wrap:before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: #95C7FA; opacity: 0.35}
  .landing-page #banner { text-align: center; }
- .landing-page #banner, .tall-header-page #banner, .short-header-page #banner { background: none; padding: 0; display: table-cell; vertical-align: middle; }
+ .landing-page #banner, .tall-header-page #banner, .short-header-page #banner { background: none; padding: 0; vertical-align: middle; } /* display: table-cell;  */
  .short-header-page #banner, .tall-header-page #banner { display: table-row; height: 100%; }
  .tall-header-page #banner h2, .short-header-page #banner h2 { background: none; text-align: left; display: table-cell; text-transform: none; vertical-align: middle; font-size: 36px; line-height: 1; padding: 0; white-space: nowrap; }
  .tall-header-page #banner div.paragraph, .short-header-page #banner div.paragraph { background: none; display: table-cell; padding: 0 0 0 20px; font-size: 22px; line-height: 1; vertical-align: middle; width: 100%; }
@@ -157,3 +157,28 @@ div.paragraph ul, div.paragraph ol { padding-left: 2.3em !important; margin: 5px
 div.paragraph li { padding-left: 5px !important; margin: 3px 0 0 !important; }
 div.paragraph ul, div.paragraph ul li { list-style: disc outside !important; }
 div.paragraph ol, div.paragraph ol li { list-style: decimal outside !important; }
+
+#wsite-title, div.text-banner {
+  color: white;
+  font-family: 'Grand Hotel', cursive;
+  white-space: nowrap;
+}
+
+#wsite-title {
+  font-size: 1.5em;
+  font-weight: 100;
+}
+
+div.text-banner {
+  font-size: 9em;
+  padding: 1em 0em;
+}
+
+.landing-page div#banner-wrap {
+  position: fixed;
+  height: 100%;
+}
+
+div.table-container {
+  color: black;
+}
