@@ -29,8 +29,8 @@ from models import Section
 TIMEZONE = timezone('US/Eastern')
 REGSTART = TIMEZONE.localize(datetime.datetime(year=2017,
                                                month=1,
-                                               day=13,
-                                               hour=0,
+                                               day=26,
+                                               hour=10,
                                                minute=0,
                                                second=1))
 REGEND   = TIMEZONE.localize(datetime.datetime(year=2017,
