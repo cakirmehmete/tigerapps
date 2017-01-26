@@ -153,13 +153,13 @@ App.Section = DS.Model.extend({
         return this.get('conflictText') != null;
     }.property('conflictText'),
     conflictText: function() {
-        // Hack to handle OA courses
+        // Hack to handle OA courses: look at course name to see if it starts with OA
         if (this.get('course').get('title').substring(0,3) == 'OA ') {
             return '&nbsp;<b><a href="https://oa.princeton.edu/TripStore" target="_blank"><i class="fa fa-external-link"></i> Register on OA site</a></b>';
         }
 
-        // Repeating the OA hack to handle general external courses
-        if (this.get('course').get('title').substring(0,3) == 'XT ') {
+        // Repeating the OA hack to handle general external courses. See if course name starts with (External)
+        if (this.get('course').get('title').startsWith('(External') ) {
             return 'Please follow the external registration link in the course details.';
         }
 
