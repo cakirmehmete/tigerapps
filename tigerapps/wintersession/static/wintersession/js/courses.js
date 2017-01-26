@@ -158,6 +158,11 @@ App.Section = DS.Model.extend({
             return '&nbsp;<b><a href="https://oa.princeton.edu/TripStore" target="_blank"><i class="fa fa-external-link"></i> Register on OA site</a></b>';
         }
 
+        // Repeating the OA hack to handle general external courses
+        if (this.get('course').get('title').substring(0,3) == 'XT ') {
+            return 'Please follow the external registration link in the course details.';
+        }
+
         // Not conflicting if already registered
         if (this.get('isRegistered')) {
             return null;
