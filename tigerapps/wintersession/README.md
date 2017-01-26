@@ -1,5 +1,37 @@
 This app powers the course registration system for Wintersession, a week of student-run classes during Intersession each year.
 
+URL: http://wintersession.tigerapps.org/
+
+# Use
+
+First, I suggest logging in as a student by hitting Enroll -- you'll be prompted to log in with your netid.
+
+Then, in an incognito window, you can open the admin panel (http://wintersession.tigerapps.org/admin/) and log in with staff credentials. Once you're logged in, hit the "Django Admin" button. You'll see all data tables there.
+
+To add new courses, hit Courses, then "Add course" on the top right. Here's how to fill out the form:
+
+* Course ID: enter some kind of numerical ID, like 10000. But if the course has a hard enrollment cap, put an E in front of the course ID, e.g. E10000. Make sure these are unique.
+* Description, Cancelled, Room: self-explanatory
+* Title: if you add "(External)", without the quotes, at the beginning of the course title, users will be prompted to look at the course description for external enrollment information. If the course title starts with "OA", the student will be prompted to visit the OA website.
+* Min enroll: leave this at 0.
+* Max enroll: the system will allow enrollment up to this number if the course has a hard cap, or up to 30% more than this number otherwise.
+* Blocks: this field encodes times when the course occurs. Each meeting should be written as: `[days of week] [start]-[end]`. Separate meetings with an `&`.
+Days of the week should be written as: `Su`, `M`,`Tu`,`W`,`Th`,`F`,`Sa`. Valid examples:
+    * `M W Th 10:00am-11:00am & Tu F 6pm-7:30pm`
+    * `Tu Th 10am-11:30am`
+    * `M 10:00AM-11:00AM & Tu 06:00PM-07:30PM`
+* Schedule: this field isn't used; set it to TBD.
+* Instructors: these users will have special access to the course and their names will be shown to students. Either choose from among available instructors, or hit the green + button to the right of "Chosen Instructors" to add a new instructor. (When adding an instructor, you'll be asked whether the instructor is a faculty member. I think this just means that their hours are not tracked.)
+* Other sections of the same course: Separate parallel sections are stored as separate courses. This is where you can connect two parallel sections -- you can choose another course you've already added, or hit the + button to create it in-line.
+
+## Possible gotchas
+
+* netID-email alias discrepancies: there is sometimes a difference between someone's netid and their email address. This means that some instructor email addresses might not match their netids. When they log in with their netids, the system might not realize they're the same instructor as the email addresses on file (added through the Add Instructor form you can trigger when adding a course). If an instructor is unable to access their list of students, this means their instructor entry in the Instructors table should be changed to reflect their actual netid.
+
+
+
+# Development
+
 ## Architecture
 
 Django powers the backend and is in charge of rendering most pages. The registration page is an Ember app which communicates with the Django backend via a REST API. Registration constraints, such as whether the student is trying to register for a class that conflicts with another they already chose, are checked on both the frontend and backend.
@@ -32,7 +64,9 @@ Specify the class capacity in the “Max enroll” field. Leave the “Min enrol
 
 Check the “Cancelled” box to mark the section as cancelled on the website.
 
-The course ID should be manually specified. There are special ID formats to enforce certain conditions. A course ID starting with “E” will strictly enforce the registration cap you specify and won’t allow over-enrollment. A course ID starting with “OA” will not allow enrollment through the system directly, and instead display a link to the Outdoor Action website.
+The course ID should be manually specified. There are special ID formats to enforce certain conditions. A course ID starting with “E” will strictly enforce the registration cap you specify and won’t allow over-enrollment.
+
+The course name/title can also be used to redirect to external enrollment links. A course title starting with “OA” will not allow enrollment through the system directly, and instead display a link to the Outdoor Action website. A course title starting with "(External)" will show a message pointing to the user to examine the course description for external enrollment information.
 
 When a student logs into the website to register for courses, a Student is automatically created in the database with their netID. When they register for some section of a course, a Registration is created that links the Student to the Course.
 
@@ -86,3 +120,7 @@ In JSON fixtures format:
 ]
 
 ```
+
+# TODOs
+
+* [ ] Change hacky "(External)" course title handling (see `courses.js`) to a proper flag for marking courses that have external registration links.
