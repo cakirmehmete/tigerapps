@@ -21,3 +21,7 @@ mysqldump -u [user] -p [database] | gzip > [filename]
 
 From Django's admin panel (e.g. at http://wintersession.tigerapps.org/djadmin/), create a User with Staff status and all permissions for the site of interest, e.g. Wintersession, only.
 
+## apply a database migration
+sudo /srv/tigerapps_env/bin/python manage.py schemamigration [app-name] --auto
+/srv/tigerapps_env/bin/python manage.py migrate [app-name]
+

@@ -46,27 +46,27 @@ def create(request):
             listing.posted = datetime.datetime.now()
             listing.save()
             return HttpResponseRedirect("/item/" + str(listing.listingID))
-    
+
     return render_to_response('ttrade/create.html', {'logged_in': True, 'listingForm': listingForm, 'hide': True})
 
 
 def item(request, listingID):
     listing = get_object_or_404(Listing, listingID=listingID)
-    
-    # User messages (why make a whole system for two messages, anyway?)
-    messages = [] 
 
-    # Check if logged in 
-    edit = expired = False
+    # User messages (why make a whole system for two messages, anyway?)
+    messages = []
+
+    # Check if logged in
+    edit = False
+    expired = datetime.datetime.now() > listing.expire
     if request.user.is_authenticated():
         logged_in = True
         if request.user.is_staff:
             edit = True
         if request.user == listing.user: # Owner of listing
             edit = True
-        if datetime.datetime.now() > listing.expire: # Expire
+        if expired: # Expire
             messages.append("Note: Offers can no longer be made on this listing since it has expired.")
-            expired = True
             #title = "Sorry!"
             #body = "This post has expired!"
             #return render_to_response('ttrade/confirm.html', {'title': title, 'body': body, 'logged_in': logged_in})
@@ -76,12 +76,12 @@ def item(request, listingID):
     else: # Not logged in
         logged_in = False
         offers = []
-    
+
 
     if request.method == 'GET':
         if 'expiration' in request.GET or 'edited' in request.GET:
             messages.append("Your changes have been made.")
-    else:        
+    else:
         if 'offer' in request.POST:
             offer = get_object_or_404(Offer, offerID=int(request.POST['offer']))
             if 'Accept' in request.POST:
@@ -103,23 +103,23 @@ def item(request, listingID):
                 listing.save()
                 offerRejection(listing, offer)
                 messages.append("The offer has been removed.")
-    
+
     # If method is fixed or free
     if listing.method == "Fr" or listing.method == "Fi":
         return render_to_response('ttrade/fixedOrFree.html', {'edit': edit, 'messages': messages, 'logged_in': logged_in, 'listing': listing, 'expired': expired, 'offers': offers})
-        
+
     # If method is anything else (where you make an offer) (this includes requests to buy)
     return render_to_response('ttrade/claim.html', {'edit': edit, 'messages': messages, 'logged_in': logged_in, 'listing': listing, 'expired': expired, 'offers': offers})
- 
+
 
 # Does all the buying
-@login_required   
+@login_required
 def confirm(request):
     if request.method == 'POST' and 'listing' in request.POST:
         listing = Listing.objects.get(listingID=int(request.POST['listing']))
         if datetime.datetime.now() > listing.expire:
             return HttpResponseRedirect('/')
-            
+
         title = "Success!"
         user = request.user
         price = additional = None
@@ -137,7 +137,7 @@ def confirm(request):
         else: # Includes requests to buy
             additional = request.POST['additional']
             body = "You have made an offer for"
-        
+
         offer = Offer(user=user, price=price, additional=additional)
         offer.save()
         listing.offers.add(offer)
@@ -148,12 +148,12 @@ def confirm(request):
         else:
             offerBuyerConfirmation(listing, offer)
             offerListerConfirmation(listing, offer)
-        
+
         body +=  " the listing \"" + listing.title + "\". An email has been sent to both you and the lister."
         return render_to_response('ttrade/confirm.html', {'title': title, 'body': body, 'logged_in': True})
     else:
         return HttpResponseRedirect('/')
- 
+
 
 # Lulzy method
 def notYourListing(request):
@@ -162,14 +162,14 @@ def notYourListing(request):
     return render_to_response('ttrade/confirm.html', {'title': title, 'body': body, 'logged_in': True})
 
 
-# Change the expiration of a listing  
-@login_required  
+# Change the expiration of a listing
+@login_required
 def expiration(request, listingID):
     listing = Listing.objects.get(listingID=listingID)
     # Lulzy error
     if not request.user.is_staff and request.user != listing.user:
         return notYourListing(request)
-    # Make changes and redirect back to item page  
+    # Make changes and redirect back to item page
     if request.method == "POST" and 'days' in request.POST and 'hours' in request.POST:
         listing.expire = datetime.datetime.now() + datetime.timedelta(days=int(request.POST['days']), hours=int(request.POST['hours']))
         listing.save()
@@ -177,14 +177,14 @@ def expiration(request, listingID):
     # Blank form
     return render_to_response('ttrade/expiration.html', {'listing': listing, 'logged_in': True})
 
-    
-@login_required  
+
+@login_required
 def edit(request, listingID):
     listing = Listing.objects.get(listingID=listingID)
     # Lulzy error
     if not request.user.is_staff and request.user != listing.user:
         return notYourListing(request)
-    # Make edits and redirect to item page 
+    # Make edits and redirect to item page
     if request.method == 'POST':
         listingForm = ListingForm(request.POST, request.FILES, instance=listing)
         if listingForm.is_valid():
@@ -193,24 +193,24 @@ def edit(request, listingID):
     # Make blank form
     listingForm = ListingForm(instance=listing)
     return render_to_response('ttrade/edit.html', {'listingID': listing.listingID, 'logged_in': True, 'listingForm': listingForm, 'listingType': listing.listingType})
-  
-    
+
+
 def terms(request):
     if request.user.is_authenticated():
         logged_in = True
     else:
         logged_in = False
     return render_to_response('ttrade/terms.html', {'logged_in': logged_in})
-  
 
-# Generic view that does yourListings and index  
+
+# Generic view that does yourListings and index
 def showListings(request, listing_set, template, extension="", list_title="All Listings"):
     # Check if logged in
     if request.user.is_authenticated():
         logged_in = True
     else:
         logged_in = False
-        
+
     # Get categories for search and appends amount in each category
     choices = CATEGORY_CHOICES
     categories = []
@@ -229,23 +229,23 @@ def showListings(request, listing_set, template, extension="", list_title="All L
             oldGet += "&category=" + category
     else:
         category = None
-        
+
     if 'listingType' in request.GET:
         listingType = request.GET['listingType']
         if listingType != 'A':
             listings_list = listings_list.filter(listingType=listingType)
             oldGet += "&listingType=" + listingType
     else:
-        listingType = None  
-        
+        listingType = None
+
     if 'query' in request.GET:
         query = request.GET['query']
-        if query != "" and query.strip() != "": 
+        if query != "" and query.strip() != "":
             listings_list = listings_list.filter(get_query(query, ['title', 'description']))
             oldGet += "&query=" + query
     else:
         query = None
-    
+
     if 'order' in request.GET:
         order = request.GET['order']
         if order == 'P':
@@ -256,17 +256,17 @@ def showListings(request, listing_set, template, extension="", list_title="All L
             listings_list = listings_list.order_by('expire')
         oldGet += "&order=" + order
     else:
-      listings_list = listings_list.order_by('expire')  
+      listings_list = listings_list.order_by('expire')
       order = "R"
-           
+
     if 'reverse' in request.GET and request.GET['reverse'] == 'True':
         listings_list = listings_list.reverse()
         reverse = True
     else:
         reverse = False
-                
-       
-    # Pagination 
+
+
+    # Pagination
     if 'items' in request.GET:
         items = int(request.GET['items'])
     else:
@@ -274,9 +274,9 @@ def showListings(request, listing_set, template, extension="", list_title="All L
     if 'page' in request.GET:
         page = int(request.GET['page'])
     else:
-        page = 1  
+        page = 1
     paginator = Paginator(listings_list, items)
-    
+
     try:
         listings = paginator.page(page)
     except PageNotAnInteger:
@@ -285,6 +285,5 @@ def showListings(request, listing_set, template, extension="", list_title="All L
     except EmptyPage:
         # If page is out of range (e.g. 9999), deliver last page of results.
         listings = paginator.page(paginator.num_pages)
-           
+
     return render_to_response(template, {'extension': extension, 'reverse': reverse, 'listingType': listingType, 'query': query, 'category': category, 'items': items, 'page': page, 'categories': categories, 'oldGet': oldGet, 'logged_in': logged_in, 'listings': listings, 'order': order, 'list_title': list_title})
-    

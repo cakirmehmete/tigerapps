@@ -6,16 +6,18 @@
 /* global L */
 
 map = L.map('map', {
-    scrollWheelZoom: false
+    scrollWheelZoom: false,
+    maxBoundsViscosity: 1.0,
 });
 
 //Holds references to different map layers
 layers = {};
 
-layers.tiles = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+layers.tiles = L.tileLayer(//'https://api.mapbox.com/styles/v1/bnprks/cizxah1p6003n2rs6zu65xd7i/tiles/256/{z}/{x}/{y}?access_token={accessToken}', {
+  'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
     attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery &copy <a href="http://mapbox.com">Mapbox</a>, Rooms app by Ben Parks \'17',
-    id: 'mapbox.streets-basic',
-    accessToken: 'pk.eyJ1IjoiYm5wcmtzIiwiYSI6ImNpbGNoemFubjJ4c2d0dWx4MDVvbHpmczcifQ.Lm1VY5wMBGN-cGzMZ2gYqA'
+    id: 'bnprks.9754e7af',//'mapbox.streets-basic',
+    accessToken: 'pk.eyJ1IjoiYm5wcmtzIiwiYSI6ImNqMHVpaHBndjA2NG0zMnFheG5kbG5wa3AifQ.Cypl8hCriRSkA4XF-4GgMQ'
 });
 
 layers.footprints = L.geoJson(footprints, {
@@ -31,7 +33,7 @@ layers.footprints = L.geoJson(footprints, {
         }
         var colleges = buildings[feature.properties.id].college.sort()
         var fill = colors[colleges[0]]
-        if (colleges.length > 1) {        
+        if (colleges.length > 1) {
             fill = "url(#" + colleges.join('-') + ")"
         }
         return {
@@ -47,7 +49,7 @@ layers.footprints = L.geoJson(footprints, {
         var building = buildings[feature.properties.id]
         layer.bindPopup('<strong>' + building.name + '</strong><br/>Click to view floorplans',
                            {closeButton: false, autoPan: false});
-               
+
         layer.on({
             'mouseover': setHover.bind(layer),
             'mouseout': removeHover.bind(layer),
@@ -101,7 +103,7 @@ function setMapView(floorplan_id) {
         map.setView(mapPos.center, mapPos.zoom, {reset: true});
         map.setZoom(mapPos.zoom, {animate: false});
         mapPos = null;
-        
+
 
         map.addControl(legend_control);
         if (overlay_control) {
@@ -128,38 +130,38 @@ function setMapView(floorplan_id) {
         var imgDimensions;
         if (mapDimensions.width/rawImgDimensions.width > mapDimensions.height/rawImgDimensions.height) {
 
-            imgDimensions = {width: rawImgDimensions.width/rawImgDimensions.height*mapDimensions.height, 
+            imgDimensions = {width: rawImgDimensions.width/rawImgDimensions.height*mapDimensions.height,
                             height: mapDimensions.height}
         } else {
 
-            imgDimensions = {width: mapDimensions.width, 
+            imgDimensions = {width: mapDimensions.width,
                             height:rawImgDimensions.height/rawImgDimensions.width*mapDimensions.width}
         }
-        
+
         //Set map zoom and center
         var w = imgDimensions.width,
             h = imgDimensions.height,
             url = '/static/newrooms/svgz/' + floorplan_id + ".svgz" + cache_bust;
-            
+
             var southWest = map.unproject([0, h], 16);
             var northEast = map.unproject([w, 0], 16);
             var bounds = new L.LatLngBounds(southWest, northEast);
-        
+
         map.removeLayer(layers.tiles).removeLayer(layers.footprints);
         if (map.hasLayer(layers.floorplan)) map.removeLayer(layers.floorplan);
-        layers.floorplan = L.imageOverlay(url, bounds); 
+        layers.floorplan = L.imageOverlay(url, bounds);
         map.addLayer(layers.floorplan);
-        
+
         if (mapPos == null) {
             mapPos = {center: map.getCenter(), zoom: map.getZoom()};
-            
+
             map.setMaxBounds(bounds);
             map.setMinZoom(16).setMaxZoom(18);
             map.setView(map.unproject([w/2, h/2], 16),16, {reset: true});
             map.setZoom(16);
 
-        }          
-        
+        }
+
         //Set overlay
         if (overlay_control) {
             map.removeControl(overlay_control);
@@ -168,8 +170,8 @@ function setMapView(floorplan_id) {
             floor_id = floorplan_id.split("-")[1]
         overlay_control = new OverlayControl({"building_id":building_id, "floor_id":floor_id});
         map.addControl(overlay_control)
-        
-    }  
+
+    }
 }
 
 /** Initialize the map with the given layers **/
@@ -184,7 +186,7 @@ if (hash) {
 
 var substringMatcher = function(strs) {
     return function findMatches(q, cb) {
-       
+
         var matches, substringRegex;
 
         // an array that will be populated with substring matches
