@@ -12,18 +12,22 @@
 <script src="/static/newrooms/js/bootstrap.min.js{{bust}}"></script>
 
 
-<link rel="stylesheet" type="text/css" href="/static/newrooms/css/bootstrap-material-design.min.css{{bust}}"/>
+<link rel="stylesheet" type="text/css" href="/static/newrooms/css/bootstrap-material-design-reduced.css{{bust}}"/>
 
-<!--<script type="text/javascript" src="js/material.min.js"></script>
-<script type="text/javascript" src="js/ripples.min.js"></script>-->
+<!--<script type="text/javascript" src="/static/newrooms/js/material.min.js"></script>
+<script type="text/javascript" src="/static/newrooms/js/ripples.min.js"></script>-->
 
 <script type="text/javascript" src="/static/newrooms/js/rooms.js{{bust}}"></script>
 <link rel="stylesheet" type="text/css" href="/static/newrooms/css/datatables.min.css{{bust}}"/>
 <script type="text/javascript" src="/static/newrooms/js/datatables.min.js{{bust}}"></script>
 
+<!--Stuff for detail popup -->
+<link rel="stylesheet" href="/static/newrooms/css/css-stars.css{{bust}}">
+<script src="/static/newrooms/js/jquery.barrating.js{{bust}}"></script>
+
 <style>
     
-tbody > tr {
+#table tbody > tr {
     cursor: pointer;
 }
 
@@ -56,10 +60,10 @@ tbody > tr {
     color: #000;
 }
 
-thead th {
+#table thead th {
     border-right: 1px solid #EEE;
 }
-thead th:first-child {
+#table thead th:first-child {
     border-left: 1px solid #EEE;
 }
 
@@ -84,13 +88,13 @@ table.dataTable.table-condensed>thead>tr>th {
     background-color: #FFA726;
 }
 
-.table>thead>tr>th {
+#table .table>thead>tr>th {
     vertical-align: middle;
 }
 
 /* prevent navbar collapse and force horiontal scroll*/
 body, nav.navbar.navbar-default {
-    min-width: 985px;/*Good enough to prevent breaks within the header words*/
+    min-width: 835px;/*Good enough to prevent breaks within the header words*/
 }
 
 .navbar-brand {
@@ -106,6 +110,10 @@ body, nav.navbar.navbar-default {
 }
 .navbar-header, .navbar-nav>li {
     float: left;
+}
+
+.btn-warning {
+    background-color: #FFA726 !important;
 }
 </style>
 </head>
@@ -124,13 +132,21 @@ body, nav.navbar.navbar-default {
     </div>
          
 </nav>
+{% include "newrooms/disclaimer.html" %}
 <div class="container-fluid">
    <div class="col-md-12 col-lg-10" style="float: none; margin: 0 auto;"> <!-- center -->
    <div class="alert alert-dismissible alert-info">
         <strong>Heads up!</strong> This data will not be updated during room draw. For the most up-to-date information, visit 
         the official <a href="http://housing.princeton.edu" class="alert-link">housing site</a>
+        <small style="float: right;">Last Updated: March 2017</small>
         
     </div>
+    {% if not left_review %}
+    <div class="alert alert-dismissible alert-danger">
+        <strong>Help your fellow students!</strong> Review your current room by clicking on it in the table below
+    </div>
+    {% endif %}
+
     <div class="panel panel-default">
         <div class="panel-body">
                 <noscript>Please enable Javascript to use this page.</noscript>
@@ -141,29 +157,76 @@ body, nav.navbar.navbar-default {
            </div>
         </div>
         <div class="alert alert-dismissible alert-info">
-            <strong>Pro-tip: </strong> click on a room in the table to jump to its floorplan
+            <strong>Pro-tip: </strong> click on a room in the table to see reviews.
         </div>
          <div class="credit">App by Ben Parks '17 with help from Maxim Zaslasvsky '17 <br></div>
         
     </div>
     
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="roomModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h3 class="modal-title"><b><span id="room-name"></span> <span id="building-name"></span></b> (<span id="college-name"></span>)</h3>
+      </div>
+      <div class="modal-body">
+        <h3 style="display:inline">Room Details</h3>
+        <a id="floorplan-link" class="overlay-link btn btn-warning btn-raised pull-right" style="outline: none; margin:0">View Floor Plan</a>
+        <br><br>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Floor</th>
+                    <th>Square Feet</th>
+                    <th># of People</th>
+                    <th># of Rooms</th>
+                    <th>Sub-Free</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td id="floor"></td>
+                    <td id="sqft"></td>
+                    <td id="people"></td>
+                    <td id="rooms"></td>
+                    <td id="subfree"></td>
+                </tr>
+            </tbody>
+        </table>
+        <span id="adjacent-room"><b>Adjacent Room: </b><span class="content"></span><br></span>
+        <span id="features"><b>Special Features: </b><span class="content"></span><br></span>
+        <span id="gender"><b>Gender: </b><span class="content"></span><br></span>
+        <br><br>
+        <span id="review-container"></span>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
     table = $("#table").DataTable({
         data: rooms,
         columns: [
             { title: "College", visible: true}, // will be hidden at times
             { title: "Building" },
-            { title: "Floor", width: "4em" },
-            { title: "Room", width: "4em"},
-            { title: "Sqft", width: "4em" },
-            { title: "# of People", width: "4em" },
-            { title: "# of Rooms", width: "4em" },
-            { title: "Gender"},
-            { title: "Sub-Free", width: "4em" },
-            { title: "Z-group", width: "4em"},
-            { title: "Adjacent Room" },
-            { title: "Features" }
+            { title: "Floor", width: "10%" },
+            { title: "Room", width: "10%"},
+            { title: "Sqft", width: "10%" },
+            { title: "# of People", width: "10%" },
+            { title: "# of Rooms", width: "10%" },
+            { title: "Gender", visible: false},
+            { title: "Sub-Free", width: "10%" },
+            { title: "Z-group", width: "4em", visible: false},
+            { title: "Adjacent Room", visible: false },
+            { title: "Features", visible: false }
         ],
         pageLength: 25,
         lengthChange: false,
@@ -174,7 +237,7 @@ body, nav.navbar.navbar-default {
 
     //Add Tab navigation
     tabs = $("#tabs")
-    all_name = "All Draws"
+    all_name = "All Rooms"
     colleges = [all_name, "Butler", "Forbes", "Independent", "Mathey", "Rockefeller", "Upperclass", "Whitman", "Wilson"]
     for (var i = 0; i < colleges.length; i++) {
         li = $('<li role="presentation"><a role="tab" data-toggle="tab">'+ colleges[i] +'</a></li>')
@@ -185,14 +248,14 @@ body, nav.navbar.navbar-default {
         text = event.target.innerText;
 
         // Show "college" column if switched to "All draws"
-        if(text == all_name) {
+        /*if(text == all_name) {
             table.column(0).visible(true);
             $('#college_placeholder_header').show();
         }
         else {
             table.column(0).visible(false);
             $('#college_placeholder_header').hide();
-        }
+        }*/
 
         //Perform Search
         if (text == all_name) {text = ""}
@@ -243,23 +306,86 @@ body, nav.navbar.navbar-default {
             if (vals[idx].length == 0) {
                 input.on('input', event_handler)
             }
+
+            if (!this.api().column(idx).visible()) {
+                th.hide()
+            }
+
             th.appendTo(searchRow)
         }
         searchRow.appendTo(this.api().table().header())
 
     }
 
-    //Handle links into map
-    $("tbody").on("click",'tr', function(event) {
-        row = table.row(this).data();
-        var dorm = row[1];
-        var floor = row[2];
-        var room = row[3]
-        var ID = getFloorID(dorm, floor, room)
-        console.log(ID)
-        window.location.assign("map.html#" + ID);
+    
+    //Fancy AJAX to get Room Reviews to work in the popup
+    $('#review-container').on("click", "a", function(event) {
+        $('#roomModal #review-container').load(event.target.href);
+        event.preventDefault();
+    })
+
+    $('#review-container').on("click", "form :submit", function(event) {
+        form = $(this).closest("form");
+        var formData = form.serialize() 
+        if ($(this).attr('name')) {
+            if (formData.length > 0) {
+                formData += '&' ;
+            }
+            formData += encodeURI($(this).attr('name'))
+                + '='
+                + encodeURI($(this).attr('value'))
+        }
+        $.ajax({
+            success: function(data){
+                $('#review-container').html(data);
+            },
+            error: function() {
+                $('#review-container').html("<i>Sorry, there was an error contacting the server</i>");
+            },
+            data: formData,
+            dataType: "html",
+            method: form.attr('method'),
+            url: form.attr('action'),
+
+        })
+        event.preventDefault();
     })
     
+    //Handle populating the Room Detail modal
+    $("#table tbody").on("click",'tr', function(event) {
+        var row = table.row(this).data();  
+        var dorm = row[1];
+        var floor = row[2];
+        var room = row[3];
+        var ID = getFloorID(dorm, floor, room)
+        $('#roomModal').modal('show');
+        $('#roomModal #building-name').text(row[1])
+        $('#roomModal #room-name').text(row[3])
+        $('#roomModal #college-name').text(row[0])
+        $('#roomModal #floor').text(row[2])
+        $('#roomModal #sqft').text(row[4])
+        $('#roomModal #people').text(row[5])
+        $('#roomModal #rooms').text(row[6])
+        $('#roomModal #subfree').text(row[8])
+        if(row[10]) {
+            $('#roomModal #adjacent-room').show();
+            $('#roomModal #adjacent-room .content').text(row[10]);
+        } else {$('#roomModal #adjacent-room').hide()}
+        if(row[11]) {
+            $('#roomModal #features').show();
+            $('#roomModal #features .content').text(row[11]);
+        } else {$('#roomModal #features').hide();}
+        if(row[7]) {
+            $('#roomModal #gender').show();
+            $('#roomModal #gender .content').text(row[7]);       
+        } else {$('#roomModal #gender').hide();}
+
+        $('#roomModal #floorplan-link').attr('href', "map.html#" + ID);
+        var buildingID = ID.slice(0, ID.indexOf("-"))
+        var reviewURL = "/review/"+buildingID+"/"+room+"/view";
+        $('#roomModal #review-container').load(reviewURL)
+    })
+
     function getFloorID(dorm, floor, room) {
         var buildings = {"Little Hall": {"floors": ["00", "01", "02", "03", "04", "05", "A"], "id": "0021"}, "Blair Hall": {"floors": ["01", "02", "03", "04", "A"], "id": "0019"}, "Bogle Hall": {"floors": ["00", "01", "02"], "id": "0695"}, "1938 Hall": {"floors": ["01", "02", "03", "A"], "id": "0092"}, "1915 Hall": {"floors": ["01", "02", "A"], "id": "0071"}, "Wendell HallC": {"floors": ["00", "01", "02", "03", "04"], "id": "0670"}, "Wendell HallB": {"floors": ["00", "01", "02", "03", "04"], "id": "0669"}, "Henry Hall": {"floors": ["00", "01", "02", "03", "04", "05"], "id": "0043"}, "Wright Hall": {"floors": ["01", "02", "03", "04", "A"], "id": "0619"}, "Murley-Pivirotto Hall": {"floors": ["00", "01", "02", "03", "04"], "id": "0674"}, "Fisher Hall": {"floors": ["00", "01", "02", "03"], "id": "0671"}, "Pyne Hall": {"floors": ["01", "02", "03", "04", "05", "A"], "id": "0040"}, "1939 Hall": {"floors": ["01", "02", "03", "04", "A"], "id": "0093"}, "Laughlin Hall": {"floors": ["00", "01", "02", "03", "04"], "id": "0047"}, "Edwards Hall": {"floors": ["01", "02", "03", "04", "05", "A"], "id": "0010"}, "Spelman Hall": {"floors": ["01", "02", "03", "04", "A"], "id": "0153"}, "1903 Hall": {"floors": ["01", "02", "03", "04", "A"], "id": "0053"}, "Campbell Hall": {"floors": ["01", "02", "03", "A"], "id": "0026"}, "Bloomberg Hall": {"floors": ["A", "01", "02", "03", "04"], "id": "0627"}, "Foulke Hall": {"floors": ["00", "01", "02", "03", "04"], "id": "0042"}, "Brown Hall": {"floors": ["01", "02", "03", "04", "A"], "id": "0014"}, "Baker HallE": {"floors": ["00", "01", "02", "03", "04"], "id": "0673"}, "Forbes CollegeA": {"floors": ["01", "02", "03", "04", "A"], "id": "0592"}, "1981 Hall": {"floors": ["A", "00", "01", "02", "03", "04"], "id": "0668"}, "Cuyler Hall": {"floors": ["01", "02", "03", "A"], "id": "0030"}, "Clapp Hall": {"floors": ["00", "01", "02", "03", "3M"], "id": "0164"}, "Patton Hall": {"floors": ["00", "01", "02", "03", "04", "A"], "id": "0023"}, "1937 Hall": {"floors": ["00", "01", "02", "03"], "id": "0091"}, "Gauss Hall": {"floors": ["01", "02", "A"], "id": "0095"}, "Hargadon Hall": {"floors": ["00", "01", "02", "03", "04"], "id": "0672"}, "Holder Hall": {"floors": ["01", "02", "03", "04", "05", "A"], "id": "0028"}, "Dod Hall": {"floors": ["01", "02", "03", "04", "05", "A"], "id": "0012"}, "Forbes College": {"floors": ["01", "02", "03", "04", "A"], "id": "0148"}, "1901 Hall": {"floors": ["00", "01", "02", "03", "04"], "id": "0047"}, "Buyers Hall": {"floors": ["01", "02", "03", "A"], "id": "0631"}, "Baker HallS": {"floors": ["00", "01", "02", "03", "04"], "id": "0673"}, "Walker Hall": {"floors": ["00", "01", "02", "03", "A"], "id": "0056"}, "1927 Hall": {"floors": ["00", "01", "02", "03", "3M"], "id": "0164"}, "Wilf Hall": {"floors": ["00", "01", "02", "03", "04"], "id": "0696"}, "Joline Hall": {"floors": ["01", "02", "03", "A"], "id": "0059"}, "Witherspoon Hall": {"floors": ["00", "01", "02", "03", "04", "05", "06"], "id": "0007"}, "Yoseloff Hall": {"floors": ["00", "01", "02"], "id": "0693"}, "Lockhart Hall": {"floors": ["00", "01", "02", "03", "04"], "id": "0049"}, "Feinberg Hall": {"floors": ["00", "01", "02", "03", "04", "4M"], "id": "0162"}, "Lauritzen Hall": {"floors": ["00", "01", "02", "03", "04"], "id": "0636"}, "Scully Hall": {"floors": ["01", "02", "03", "04"], "id": "0603"}, "Hamilton Hall": {"floors": ["00", "01", "02"], "id": "0029"}, "Dodge Osborn Hall": {"floors": ["00", "01", "02", "03", "A"], "id": "0094"}, "1976 Hall": {"floors": ["00", "01", "02", "03"], "id": "0703"}, "1967 Hall": {"floors": ["00", "01", "02", "03"], "id": "0694"}}
         var splitBuildings = {'Baker Hall': true, 'Wendell Hall': true, 'Forbes College': true}

@@ -15,3 +15,6 @@ Disallow: /media/
 Disallow: /harming/humans
 Disallow: /ignoring/human/orders
 Disallow: /harm/to/self
+# Disallow indexing offerings pages for TigerTrade
+# (They are still visible even after expiring, so we don't want them indexed as well
+Disallow: /item/
