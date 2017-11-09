@@ -10,7 +10,7 @@ import urllib2
 from bs4 import BeautifulSoup
 import twitter
 
-TERM = '1182'
+TERM = '1184'
 
 def updateCourse(course):
 	log.log("Updating %s" % str(course))
