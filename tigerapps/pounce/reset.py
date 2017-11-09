@@ -11,16 +11,9 @@ setup_environ(settings)
 
 from pounce.models import *
 
-for subscription in Subscription.objects.all():
-	subscription.delete()
-	
-for theclass in Class.objects.all():
-	theclass.delete()
-	
-for course in Course.objects.all():
-	course.delete()
-	
-for entry in Entry.objects.all():
-	entry.delete()
+Subscription.objects.all().delete()
+Class.objects.all().delete()
+Course.objects.all().delete()
+Entry.objects.all().delete()
 	
 CoursesList.objects.all()[0].delete()

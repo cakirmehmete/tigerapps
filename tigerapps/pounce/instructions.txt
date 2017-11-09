@@ -2,13 +2,13 @@ INSTRUCTIONS FOR UPDATING POUNCE FOR A NEW SEMESTER
 --------------------------------------------------
 
 1) Disable the current checker processes:
-   - use ps aux to see the current checker processes
+   - use ps aux to see the current checker processes (sudo ps aux | grep pounce)
    - sudo kill -9 to kill them
-   - comment out the two lines in crontab -e
+   - comment out the two lines (for Princeton Pounce) in crontab -e
 
 2) Run 'python reset.py' to wipe the database
 
-3) Change the semester code (e.g. "1154" for Spring 2015)
+3) Change the semester code (e.g. "1184" for Spring 2018)
    in update.py.  This is the code that goes at the end of the 
    URL in the course offerings page.
    - remember to commit and push the changes
@@ -18,4 +18,4 @@ INSTRUCTIONS FOR UPDATING POUNCE FOR A NEW SEMESTER
 5) Make sure that everything (esp. emails) works 
 
 6) Reenable the checker processes
-   - un-comment in the two lines in crontab -e
+   - un-comment in the two lines (for Princeton Pounce) in crontab -e
