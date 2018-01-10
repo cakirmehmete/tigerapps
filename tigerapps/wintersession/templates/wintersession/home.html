@@ -68,10 +68,10 @@ var STYLE_PREFIX = 'wsite';
                     <td id="logo"><span class='wsite-logo'><a href='/'><span id="wsite-title">Wintersession {% now "Y" %}</span></a></td>
 					<td><ul class='wsite-menu-default'>
 					<li id='active'><a href='{% url 'home' %}'>Home</a></li>
-	<!-- 				<li id='pg263206575262786359'><a href='{% url 'courses' %}'>Courses</a></li>
+					<li id='pg263206575262786359'><a href='{% url 'courses' %}'>Courses</a></li>
 					<li id='pg263206575262786358'><a href='{% url 'enroll' %}'>Enroll</a></li>
 					<li id='pg276867464249989051'><a href='{% url 'teach' %}'>Teach</a></li>
-					<li id='pg373026107483497366'><a href='{% url 'about' %}'>About</a></li> -->
+					<li id='pg373026107483497366'><a href='{% url 'about' %}'>About</a></li>
 					</ul></td>
                 </tr>
             </table>
@@ -88,14 +88,14 @@ var STYLE_PREFIX = 'wsite';
 		<div class="text-banner">Wintersession {% now "Y" %}</div><br>
 		<!-- <h2><span class='wsite-text'>Wintersession 2018!</span></h2> -->
 		<div class="button-wrap"><div style="text-align:center;"><div style="height: 0px; overflow: hidden;"></div>
-<!-- 		<a class="wsite-button wsite-button-large wsite-button-highlight" style="margin:auto 10px; margin-bottom:" href="{% url 'enroll' %}" >
+		<a class="wsite-button wsite-button-large wsite-button-highlight" style="margin:auto 10px; margin-bottom:" href="{% url 'enroll' %}" >
 				<span class="wsite-button-inner" style="color:white !important;">
 				<strong>Students: Sign up for Courses</strong><br/>
 				</span>
-		</a> -->
-		<a class="wsite-button wsite-button-large wsite-button-highlight" style="margin:auto 10px; margin-bottom:" href="https://docs.google.com/forms/d/e/1FAIpQLSeuCq8uLdGdtmEZ5JFxxN_x9P6LT_V0T45ok6Z-LpOmKZLpbw/viewform" >
+		</a>
+		<a class="wsite-button wsite-button-large wsite-button-highlight" style="margin:auto 10px; margin-bottom:" href="{% url 'instructor' %}" >
 				<span class="wsite-button-inner" style="color:white !important;">
-				<strong>Instructors: Sign up to teach a Course</strong><br/>
+				<strong>Instructors: Manage your Course</strong><br/>
 				</span>
 		</a>
 
