@@ -1,4 +1,8 @@
 # Temporary # (until we get filesizes down)
+
+*.sublime-workspace
+*.sublime-project
+
 #############
 
 # Compiled source #
