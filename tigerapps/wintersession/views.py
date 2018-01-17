@@ -16,6 +16,7 @@ from django.forms.models import modelformset_factory, modelform_factory
 from django_cas.decorators import login_required
 from django.contrib.auth.decorators import user_passes_test as django_user_passes_test
 from utils.dsml import gdi
+import ldap
 import datetime
 from pytz import timezone
 import collections
@@ -55,16 +56,27 @@ def enroll(request):
     RequestConfig(request).configure(table)
     return render(request, 'wintersession/enroll.html', {'table': table})
 
+def _create_student(user_name):
+    try:
+        info = gdi(user_name) # get personal info from LDAP
+    except ldap.NO_SUCH_OBJECT:
+        first_name = ''
+        last_name = ''
+    else:
+        first_name = info.get('givenName')
+        last_name = info.get('sn')
+
+    s = Student.objects.create(netID=user_name,
+            first_name=first_name, last_name=last_name)
+    return s
+
 @login_required
 def student(request, error_message=None):
     user_name = request.user
     if not request.user.is_authenticated():
         return HttpResponseRedirect(reverse('login')) # Send to CAS
     if Student.objects.filter(netID=user_name).count() != 1:
-        info = gdi(user_name) # get personal info from LDAP
-        s = Student(netID=user_name, first_name=info.get('givenName'),
-                    last_name=info.get('sn')) # need to include other fields, too!
-        s.save()
+        s = _create_student(user_name)
         # Add the special event
         c = Course.objects.get(courseID='S1499')
         Registration(course=c, student=s).save()
@@ -110,10 +122,7 @@ def register(request):
     if not request.user.is_authenticated():
         return HttpResponseRedirect(reverse('login')) # Send to CAS
     if Student.objects.filter(netID=user_name).count() != 1:
-        info = gdi(user_name) # get personal info from LDAP
-        s = Student(netID=user_name, first_name=info.get('givenName'),
-                    last_name=info.get('sn')) # need to include other fields, too!
-        s.save()
+        s = _create_student(user_name)
         # Add the special event
         c = Course.objects.get(courseID='S1499')
         Registration(course=c, student=s).save()
