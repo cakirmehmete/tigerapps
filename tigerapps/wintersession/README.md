@@ -10,7 +10,7 @@ Then, in an incognito window, you can open the admin panel (http://wintersession
 
 To add new courses, hit Courses, then "Add course" on the top right. Here's how to fill out the form:
 
-* Course ID: enter some kind of numerical ID, like 10000. But if the course has a hard enrollment cap, put an E in front of the course ID, e.g. E10000. Make sure these are unique.
+* Course ID: enter some kind of numerical ID, like 10000. Make sure these are unique.
 * Description, Cancelled, Room: self-explanatory
 * Title: if you add "(External)", without the quotes, at the beginning of the course title, users will be prompted to look at the course description for external enrollment information. If the course title starts with "OA", the student will be prompted to visit the OA website.
 * Min enroll: leave this at 0.
@@ -64,7 +64,7 @@ Specify the class capacity in the “Max enroll” field. Leave the “Min enrol
 
 Check the “Cancelled” box to mark the section as cancelled on the website.
 
-The course ID should be manually specified. There are special ID formats to enforce certain conditions. A course ID starting with “E” will strictly enforce the registration cap you specify and won’t allow over-enrollment.
+The course ID should be manually specified. There are special ID formats to enforce certain conditions.
 
 The course name/title can also be used to redirect to external enrollment links. A course title starting with “OA” will not allow enrollment through the system directly, and instead display a link to the Outdoor Action website. A course title starting with "(External)" will show a message pointing to the user to examine the course description for external enrollment information.
 

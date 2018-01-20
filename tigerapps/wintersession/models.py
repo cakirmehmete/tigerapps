@@ -119,12 +119,8 @@ class Course(models.Model):
     def current_enroll_exclude(self, **kwargs):
         return len(self.students.exclude(**kwargs))
 
-    # Hack to allow 30% over-registration
     def max_enroll_with_extra(self):
-        # Hack to override with exact amounts
-        if self.courseID[0] == 'E':
-            return self.max_enroll
-        return int(1.3 * self.max_enroll)
+        return self.max_enroll
 
     def is_full(self):
         num_enroll = self.current_enroll()
