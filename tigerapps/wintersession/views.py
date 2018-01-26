@@ -35,8 +35,8 @@ REGSTART = TIMEZONE.localize(datetime.datetime(year=2018,
                                                minute=0,
                                                second=0))
 REGEND   = TIMEZONE.localize(datetime.datetime(year=2018,
-                                               month=2,
-                                               day=1,
+                                               month=1,
+                                               day=26,
                                                hour=23,
                                                minute=59,
                                                second=59))
