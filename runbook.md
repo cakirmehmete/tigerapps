@@ -9,6 +9,9 @@ python manage.py collectstatic --noinput # deploy static content
 sudo service supervisor restart # cycles the gunicorn server 
 ```
 
+Note that if environment variables are required for any application, you should
+set and update them in `/etc/supervisor/conf.d/tigerapps.conf` on the server.
+
 We have aggressive caching on tigerapps domain. Do a quick check to see if static files are wrong because of caching: compare the content at external URL http://wintersession.tigerapps.org/static/wintersession/files/main_style.css to `curl -H "Host:wintersession.tigerapps.org" localhost/static/wintersession/files/main_style.css`, for example. If they differ, purge cache in Cloudflare.
 
 ## Backups
