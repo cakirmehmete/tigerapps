@@ -5,6 +5,11 @@ import json
 import random
 import string
 import emails
+import os
+
+TWILIO_ACCOUNT_ID = os.getenv('TWILIO_ACCOUNT_ID')
+TWILIO_TOKEN = os.getenv('TWILIO_TOKEN')
+TWILIO_NUMBER = os.getenv('TWILIO_NUMBER')
 
 class Course(models.Model):
 	code = models.CharField(max_length=150)
@@ -62,10 +67,8 @@ You've subscribed to %s via PrincetonPounce!  We'll send you an email if seats i
   			return emails.sendMail(self.address, subject, body)
   			
   		elif self.type == TEXT:
-			account = "ACb6ccec5f910e1789a22033c47223a8e6"
-			token = "07e6c98d7ec04ca28abec4c57e556af3"
-			sender = "6094608209"
-			client = TwilioRestClient(account, token)
+			sender = TWILIO_NUMBER
+			client = TwilioRestClient(TWILIO_ACCOUNT_ID, TWILIO_TOKEN)
 			body = r"""
 	You've subscribed to %s via PrincetonPounce!  We'll send you a text if seats in the class open up.
 			""" % str(self.theclass)
@@ -78,10 +81,8 @@ You've subscribed to %s via PrincetonPounce!  We'll send you an email if seats i
   			return emails.sendMail(self.address, subject, body)
 
 		elif self.type == TEXT:
-			account = "ACb6ccec5f910e1789a22033c47223a8e6"
-			token = "07e6c98d7ec04ca28abec4c57e556af3"
-			sender = "6094608209"
-			client = TwilioRestClient(account, token)
+			sender = TWILIO_NUMBER
+			client = TwilioRestClient(TWILIO_ACCOUNT_ID, TWILIO_TOKEN)
 			body = """
 			A spot has opened up in %s! If you don't make it to SCORE in time, you MUST resubscribe!
 			""" % (str(self.theclass))
