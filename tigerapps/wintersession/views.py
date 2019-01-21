@@ -28,15 +28,15 @@ from models import Section
 
 # Wintersession registration start
 TIMEZONE = timezone('US/Eastern')
-REGSTART = TIMEZONE.localize(datetime.datetime(year=2018,
+REGSTART = TIMEZONE.localize(datetime.datetime(year=2019,
                                                month=1,
-                                               day=17,
+                                               day=24,
                                                hour=10,
                                                minute=0,
                                                second=0))
-REGEND   = TIMEZONE.localize(datetime.datetime(year=2018,
+REGEND   = TIMEZONE.localize(datetime.datetime(year=2019,
                                                month=1,
-                                               day=26,
+                                               day=27,
                                                hour=23,
                                                minute=59,
                                                second=59))
