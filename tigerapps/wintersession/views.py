@@ -31,7 +31,7 @@ TIMEZONE = timezone('US/Eastern')
 REGSTART = TIMEZONE.localize(datetime.datetime(year=2020,
                                                month=1,
                                                day=9,
-                                               hour=10,
+                                               hour=12,
                                                minute=0,
                                                second=0))
 REGEND   = TIMEZONE.localize(datetime.datetime(year=2020,
