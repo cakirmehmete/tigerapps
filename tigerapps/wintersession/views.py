@@ -30,16 +30,16 @@ from models import Section
 TIMEZONE = timezone('US/Eastern')
 REGSTART = TIMEZONE.localize(datetime.datetime(year=2020,
                                                month=1,
-                                               day=9,
-                                               hour=12,
+                                               day=8,
+                                               hour=0,
                                                minute=0,
                                                second=0))
 REGEND   = TIMEZONE.localize(datetime.datetime(year=2020,
-                                               month=2,
-                                               day=22,
-                                               hour=23,
-                                               minute=59,
-                                               second=59))
+                                               month=1,
+                                               day=26,
+                                               hour=0,
+                                               minute=5,
+                                               second=0))
 
 def home(request):
     return render(request, 'wintersession/home.html', {})
