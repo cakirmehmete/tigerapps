@@ -202,7 +202,6 @@ INSTALLED_APPS = (
     'groups',
 
 # In development
-    'wintersession',
     'django_tables2',
     'rest_framework',
     'django_verbatim',
